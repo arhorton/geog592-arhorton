@@ -4,8 +4,8 @@ This repository contains exercises and assignments for GEOG 592.
 
 ## Student information
 
-Name:
+Name: Anna Horton
 
-ONYEN:
+ONYEN: arhorton
 
-GitHub username:
+GitHub username: arhorton
