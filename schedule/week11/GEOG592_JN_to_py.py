@@ -1,13 +1,31 @@
 print("I started!")
 
-print("importing modules)")
+print("importing modules")
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, Ellipse
 from matplotlib.backends.backend_pdf import PdfPages 
+import argparse
 
-statefp = "20"
+parser = argparse.ArgumentParser(
+        description = "A program that makes an Atlas"
+    )
+parser.add_argument("statefp", help = "name of the state to make a page for; NC is STATEFP 37")
+print("creating the statefp variable")
+parser.add_argument("statename", help = "The name of the state that is assigned")
+print("creating the name variable")
+parser.add_argument(
+        "--color",
+        help = "This is the color of the state polygon."
+    ) 
+args = parser.parse_args()
+statefp = args.statefp
+statename = args.statename
+face_color = args.color
+
+# statefp = "20"
+
 # getting the US census data
 print("downloading data from census")
 
@@ -29,14 +47,14 @@ state_counties = state_counties.sort_values("NAME").reset_index(drop=True)
 print("making maps!")
 def county_map(county, ax):
     selected = state_counties[state_counties["NAME"] == county]
-    selected.plot(ax=ax, edgecolor="black", facecolor="#7b9b90")
+    selected.plot(ax=ax, edgecolor="black", facecolor=face_color)
     ax.set_axis_off()
 
 
 def locator_map(county, ax):
     selected = state_counties[state_counties["NAME"] == county]
     state_counties.plot(ax=ax, edgecolor="gray", facecolor="white")
-    selected.plot(ax=ax, edgecolor="black", facecolor="#7b9b90")
+    selected.plot(ax=ax, edgecolor="black", facecolor=face_color)
     ax.set_axis_off()
 
 
@@ -151,7 +169,7 @@ def county_figure(county, pdf):
     pdf.savefig(fig)
     plt.close(fig)
 
-pdfname = statefp + ".pdf"
+pdfname = statename + ".pdf"
 
 # This might take a few seconds and you need at least 40MB of free space in your computer
 with PdfPages(pdfname) as pdf:  #with #manages a resource and automatically cleans up when you finish using it.
